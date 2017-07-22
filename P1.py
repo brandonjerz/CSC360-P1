@@ -1,3 +1,4 @@
+#Big Group In The Back
 #Brandon Jerz
 #CSC 360
 #Project1 Machile Learning with sentiment Analysis
@@ -60,21 +61,26 @@ while(running):
       moderatorList = test.getModerators(debateURL)
       tokens = test.cleanHTML(debateURL)
       participantWords = test.getCount(tokens,participantList,moderatorList)
-      wordCount = len(participantWords)          
+      wordCount = len(participantWords)     
+      cData = test.getCandidateSentiment(sentences,participantList,moderatorList)     
       print "You've chosen debate number: %d" %(debateNumber)
       print("Please choose one of the following inquirys")
-      print("1. Who are the debate participants?")
-      print("2. Who are the debate monitors?")
-      print("3. How many words were spoken by the candidates as a group")
-      print("4. How many words were spoken by each of the candidates?")
-      print("5. What did X say about Y?")
-      print("6. What were each candidates 10 most said words (4 letters or more)")
-      print("7. Show sentiment analysis")
+      print("1.  Who are the debate participants?")
+      print("2.  Who are the debate monitors?")
+      print("3.  How many words were spoken by the candidates as a group")
+      print("4.  How many words were spoken by each of the candidates?")
+      print("5.  What did X say about Y?")
+      print("6.  What were each candidates 10 most said words (4 letters or more)")
+      print("7.  Which candidate used the most negative language")
+      print("8.  Which candidate used the most neutral language")
+      print("9.  Which candidate used the most positive language")
+      print("10. Which candidate had the highest compund score (average of all 3)")
+      print("11. All sentiment analysis")
       incorrect = True
       while(incorrect):
             while True:
                   try:
-                        choiceNumber = int(raw_input("Please enter a number 1-7: "))
+                        choiceNumber = int(raw_input("Please enter a number 1-11: "))
                         break
                   except ValueError:
                         print("\nPlease only use integers") 
@@ -113,7 +119,56 @@ while(running):
                   test.getCandidateTop10Words(tokens,participantList,moderatorList)
             if choiceNumber == 7:
                   incorrect = False
-                  test.debateSentiment(sentences)
+                  person = ""
+                  greatest = -12
+                  for p in participantList:
+                  		if(cData["CRUZ"]["neg"] > greatest):
+                  				greatest = cData[p]["neg"]
+                  				person = p
+                  print("%s had the greatest negative score with a score of %f therefore he/she had the most negative language"%(person,greatest))
+            if choiceNumber == 8:
+                  incorrect = False
+                  person = ""
+                  greatest = -12
+                  for p in participantList:
+                  		if(cData[p]["neu"] > greatest):
+                  				greatest = cData[p]["neu"]
+                  				person = p
+                  print("%s had the greatest neutral score with a score of %f therefore he/she had the most neutral language"%(person,greatest))
+            if choiceNumber == 9:
+                  incorrect = False
+                  person = ""
+                  greatest = -12
+                  for p in participantList:
+                  		if(cData[p]["neu"] > greatest):
+                  				greatest = cData[p]["pos"]
+                  				person = p
+                  print("%s had the greatest positive score with a score of %f therefore he/she had the most positive language"%(person,greatest))
+            if choiceNumber == 10:
+                  incorrect = False
+                  person = ""
+                  greatest = -12
+                  for p in participantList:
+                  		if(cData[p]["neu"] > greatest):
+                  				greatest = cData[p]["compound"]
+                  				person = p
+                  print("%s had the greatest compound score with a score of %f therefore he/she had the most compound language"%(person,greatest))
+                  
+                  
+            if choiceNumber == 11:
+            		incorrect = False
+            		for p in participantList:
+            			print("")
+            			print("Data for %s")%p
+            			print("-----------")
+            			print("Total Negative Score: %f")%cData[p]["neg"]
+            			print("Total Neutral Score: %f")%cData[p]["neu"]
+            			print("Total Positive Score: %f")%cData[p]["pos"]
+            			print("Total Average Compound Score: %f")%cData[p]["compound"]
+            			print("-----------")
+            			print("")
+            			
+            			
       finalDecision = int(raw_input("Enter 0 to exit or 1 to select a new debate: "))
       if finalDecision == 0:
             #EXIT PROGRAM
